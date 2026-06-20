@@ -1,0 +1,91 @@
+{
+  "description": "Minimal hand-authored flow in Langflow's export shape: ChatInput -> Prompt -> LanguageModel -> ChatOutput. Exercises the config-bound LLM slot and prompt variable substitution.",
+  "name": "Prompt + LLM",
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-1",
+        "type": "genericNode",
+        "data": {
+          "id": "ChatInput-1",
+          "type": "ChatInput",
+          "node": {
+            "display_name": "Chat Input",
+            "template": {
+              "_type": "Component",
+              "input_value": { "type": "str", "input_types": ["Message"], "value": "What is the capital of France?" }
+            },
+            "outputs": [ { "name": "message", "types": ["Message"] } ]
+          }
+        }
+      },
+      {
+        "id": "Prompt-1",
+        "type": "genericNode",
+        "data": {
+          "id": "Prompt-1",
+          "type": "Prompt",
+          "node": {
+            "display_name": "Prompt",
+            "template": {
+              "_type": "Component",
+              "template": { "type": "prompt", "value": "Answer in one short sentence. Question: {question}" },
+              "question": { "type": "str", "input_types": ["Message"], "value": "" }
+            },
+            "outputs": [ { "name": "prompt", "types": ["Message"] } ]
+          }
+        }
+      },
+      {
+        "id": "LanguageModel-1",
+        "type": "genericNode",
+        "data": {
+          "id": "LanguageModel-1",
+          "type": "LanguageModel",
+          "node": {
+            "display_name": "Language Model",
+            "template": {
+              "_type": "Component",
+              "input_value": { "type": "str", "input_types": ["Message"], "value": "" },
+              "system_message": { "type": "str", "value": "You are a helpful, terse assistant." }
+            },
+            "outputs": [ { "name": "text_output", "types": ["Message"] } ]
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-1",
+        "type": "genericNode",
+        "data": {
+          "id": "ChatOutput-1",
+          "type": "ChatOutput",
+          "node": {
+            "display_name": "Chat Output",
+            "template": {
+              "_type": "Component",
+              "input_value": { "type": "str", "input_types": ["Message"], "value": "" }
+            },
+            "outputs": [ { "name": "message", "types": ["Message"] } ]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "ChatInput-1", "target": "Prompt-1",
+        "data": { "sourceHandle": { "name": "message", "output_types": ["Message"] },
+                  "targetHandle": { "fieldName": "question", "inputTypes": ["Message"] } }
+      },
+      {
+        "source": "Prompt-1", "target": "LanguageModel-1",
+        "data": { "sourceHandle": { "name": "prompt", "output_types": ["Message"] },
+                  "targetHandle": { "fieldName": "input_value", "inputTypes": ["Message"] } }
+      },
+      {
+        "source": "LanguageModel-1", "target": "ChatOutput-1",
+        "data": { "sourceHandle": { "name": "text_output", "output_types": ["Message"] },
+                  "targetHandle": { "fieldName": "input_value", "inputTypes": ["Message"] } }
+      }
+    ]
+  }
+}

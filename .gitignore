@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+*.xcodeproj
+.DS_Store
+
+# Unrelated sibling project that lives in this folder — not part of LangflowKit
+/intent/
