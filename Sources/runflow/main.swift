@@ -1,5 +1,5 @@
 import Foundation
-import LangflowKit
+import FlowKit
 
 // Usage:
 //   swift run runflow                 # runs both sample flows with the offline "echo" backend
@@ -32,7 +32,7 @@ let args = CommandLine.arguments
 let config = demoConfig(args: args)
 let engine = FlowEngine(config: config)
 
-print("LangflowKit demo")
+print("FlowKit demo")
 print("LLM provider: \(config.defaultProvider)   components: \(ComponentRegistry.standard().registeredTypes.joined(separator: ", "))\n")
 
 // Demonstrate œ-handle decoding on the real export.

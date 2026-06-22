@@ -1,5 +1,5 @@
 import SwiftUI
-import LangflowKit
+import FlowKit
 
 struct ContentView: View {
     @State private var model = ChatViewModel()
@@ -21,7 +21,7 @@ struct ContentView: View {
     private var header: some View {
         VStack(spacing: 10) {
             HStack {
-                Label("LangflowKit", systemImage: "point.3.connected.trianglepath.dotted")
+                Label("FlowKit", systemImage: "point.3.connected.trianglepath.dotted")
                     .font(.headline)
                 Spacer()
                 Picker("Backend", selection: $model.backend) {

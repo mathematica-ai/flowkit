@@ -1,6 +1,6 @@
 import Foundation
 
-/// Sample flows bundled with LangflowKit for the demo, tests, and quick experiments.
+/// Sample flows bundled with FlowKit for the demo, tests, and quick experiments.
 ///
 /// Real apps load their **own** exported Langflow flows instead:
 /// ```swift
@@ -12,7 +12,7 @@ public enum SampleFlows {
 
     public static func data(_ name: String) throws -> Data {
         guard let url = Bundle.module.url(forResource: name, withExtension: "json") else {
-            throw FlowError.malformed("sample flow \(name).json not found in LangflowKit bundle")
+            throw FlowError.malformed("sample flow \(name).json not found in FlowKit bundle")
         }
         return try Data(contentsOf: url)
     }

@@ -4,7 +4,7 @@ import AppKit
 #endif
 
 @main
-struct LangflowDemoApp: App {
+struct FlowDemoApp: App {
     init() {
         // Bring the window to the foreground when launched via `swift run` on macOS.
         #if canImport(AppKit)
@@ -14,7 +14,7 @@ struct LangflowDemoApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("LangflowKit Demo") {
+        WindowGroup("FlowKit Demo") {
             ContentView()
         }
         #if os(macOS)

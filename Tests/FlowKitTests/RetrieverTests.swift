@@ -1,5 +1,5 @@
 import XCTest
-@testable import LangflowKit
+@testable import FlowKit
 
 final class RetrieverTests: XCTestCase {
     private let corpus = [

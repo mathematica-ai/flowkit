@@ -1,11 +1,14 @@
-# LangflowKit
+# FlowKit
 
-> Run Langflow-designed AI workflows 100% on-device on Apple — native Swift, no server, no Python.
+> Run **Langflow** and **n8n** AI workflows 100% on-device on Apple — native Swift, no server, no Python, no Node.
 
-_Unofficial. Not affiliated with or endorsed by Langflow / DataStax._
+_Unofficial. Not affiliated with or endorsed by Langflow / DataStax / n8n._
 
-Run a [Langflow](https://github.com/langflow-ai/langflow)-designed workflow **100% on-device** on
-Apple platforms — no server, no Python, and (optionally) no network.
+FlowKit takes a visual workflow you designed in [Langflow](https://github.com/langflow-ai/langflow) or
+[n8n](https://github.com/n8n-io/n8n), exports the JSON, and **executes it on-device**. One engine
+underneath (a name-keyed component registry + a topological DAG executor + a config-bound LLM slot
+backed by Apple Foundation Models); a small per-format **front-end** turns each tool's export into the
+shared `Flow` model. No server, no Python/Node, and — with the on-device model — no network.
 
 You **design** the flow in Langflow as it exists today, **export** the JSON, and a native Swift
 runtime **executes** it by mapping each component to a 1:1 Swift implementation. The LLM (and other
@@ -18,36 +21,36 @@ Models" vs "cloud API" is a config toggle, not a rebuild.
 
 ## Add it to your app
 
-The `LangflowKit` library product is what you depend on. Three ways to add it:
+The `FlowKit` library product is what you depend on. Three ways to add it:
 
 **Xcode (recommended):** File → Add Package Dependencies → enter the repo URL *or* "Add Local…" and
-pick this folder → check the **LangflowKit** library → add to your app target.
+pick this folder → check the **FlowKit** library → add to your app target.
 
 **Package.swift, by git tag:**
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mathematica-ai/langflowkit.git", from: "0.1.0"),
+    .package(url: "https://github.com/mathematica-ai/flowkit.git", from: "0.1.0"),
 ],
 targets: [
     .target(name: "YourApp", dependencies: [
-        .product(name: "LangflowKit", package: "langflowkit"),  // identity = repo name
+        .product(name: "FlowKit", package: "flowkit"),  // identity = repo name
     ]),
 ]
 ```
 
 **Package.swift, local path (no git needed):**
 ```swift
-.package(path: "../langflowkit"),
-// then: .product(name: "LangflowKit", package: "langflowkit")
+.package(path: "../flowkit"),
+// then: .product(name: "FlowKit", package: "flowkit")
 ```
 
-> The package identity is the **repo name** (`langflowkit`), while the library/module you import is
-> `LangflowKit` — that's the split between `.product(package:)` and `.product(name:)`.
+> The package identity is the **repo name** (`flowkit`), while the library/module you import is
+> `FlowKit` — that's the split between `.product(package:)` and `.product(name:)`.
 
 ## Use it from your app
 
 ```swift
-import LangflowKit
+import FlowKit
 
 // 1. pick a backend (on-device, offline, or your own — see below)
 let engine = FlowEngine(config: .appleOnDevice)   // or .echoOnly
@@ -90,9 +93,31 @@ registry.register("MyLangflowTypeName", MyComponent())   // keyed 1:1 by Langflo
 let engine = FlowEngine(config: .appleOnDevice, registry: registry)
 ```
 
+## Two engines, one runtime: n8n
+
+n8n workflows are the same shape — a JSON graph of typed nodes + connections — so they run on the
+same executor. The only per-engine pieces are a parser and a node-type registry:
+
+```swift
+let flow = try N8nWorkflowParser.parse(url: myN8nExportURL)   // n8n JSON → shared Flow
+let executor = Executor(registry: .n8nStandard(),            // n8n node types → Swift impls
+                        services: Services(llm: .from(config: .appleOnDevice)))
+let result = try await executor.run(flow)                    // trigger → Set → LLM, on-device
+```
+
+- **`N8nWorkflowParser`** maps n8n `nodes`/`connections` into the shared `Flow`.
+- **`ComponentRegistry.n8nStandard()`** ships a starter set: `manualTrigger`, `set`/`editFields`,
+  `noOp`, and an LLM/agent node routed to the same on-device `LLMProvider`.
+- **n8n expressions** (`={{ $json.field }}`) are evaluated on-device with **JavaScriptCore** (Apple's
+  built-in JS engine — App-Store-safe; no downloaded code).
+
+Scope note: most n8n nodes are *integrations* (HTTP/Slack/DB) that inherently hit the network — those
+are out of scope for an offline runner. FlowKit targets the **AI + logic subset** (LLM/agent + item
+logic), exactly as it targets Langflow's LLM/agent components.
+
 ## On-device agent, RAG & OCR
 
-Beyond plain DAG flows, LangflowKit ships the pieces an *agentic* flow needs — all on-device:
+Beyond plain DAG flows, FlowKit ships the pieces an *agentic* flow needs — all on-device:
 
 - `Agent` — an Apple Foundation Models tool-calling loop (native analogue of a Langflow `Agent` node). Give it instructions + tools; the model decides what to call.
 - `LangflowTool` — string-in/string-out tool protocol; any capability conforms.
@@ -185,7 +210,7 @@ swift run runflow --llm siri   # routes the LLM slot to Apple Foundation Models 
    output [ChatOutput-1]: The capital of France is Paris.
 ```
 
-`Sources/LangflowKit/Resources/hello-world.json` is a **real** Langflow export; `prompt-llm.json` is
+`Sources/FlowKit/Resources/hello-world.json` is a **real** Langflow export; `prompt-llm.json` is
 a minimal hand-authored flow in the same shape exercising the config-bound LLM.
 
 ## Demo app (SwiftUI)
@@ -198,7 +223,7 @@ swift run LangflowDemo          # launches the macOS app (Swift 6 / Xcode 26)
 ```
 
 - `Sources/LangflowDemo/ChatViewModel.swift` — `@Observable @MainActor` model; resolves the backend
-  from the picker and runs the flow via `FlowEngine.reply(_:flow:)`. It consumes `LangflowKit` exactly
+  from the picker and runs the flow via `FlowEngine.reply(_:flow:)`. It consumes `FlowKit` exactly
   as any other app would.
 - `Sources/LangflowDemo/ContentView.swift` — idiomatic SwiftUI: `@State` model, `ScrollViewReader`
   auto-scroll, segmented backend picker, message bubbles.
@@ -209,7 +234,7 @@ device (iOS 26+) for a fully offline run.
 
 ## License
 
-[Apache License 2.0](LICENSE). LangflowKit is unofficial and not affiliated with Langflow / DataStax — see [NOTICE](NOTICE).
+[Apache License 2.0](LICENSE). FlowKit is unofficial and not affiliated with Langflow / DataStax — see [NOTICE](NOTICE).
 
 ## Next steps
 

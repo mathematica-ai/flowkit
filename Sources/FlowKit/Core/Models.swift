@@ -44,6 +44,26 @@ public enum FlowValue: Sendable, Equatable {
         return Message(text: asText)
     }
 
+    /// The underlying dictionary, if this is a `.dict` (an n8n item is a dict).
+    public var asDict: [String: FlowValue]? {
+        if case .dict(let d) = self { return d }
+        return nil
+    }
+
+    /// Convert to a Foundation value (String / Double / Bool / Array / Dictionary /
+    /// NSNull) — used to bind `$json` into a JavaScriptCore context for n8n expressions.
+    public func toFoundation() -> Any {
+        switch self {
+        case .message(let m): return m.text
+        case .text(let s):    return s
+        case .number(let n):  return n
+        case .bool(let b):    return b
+        case .null:           return NSNull()
+        case .list(let a):    return a.map { $0.toFoundation() }
+        case .dict(let d):    return d.mapValues { $0.toFoundation() }
+        }
+    }
+
     /// Convert a JSONSerialization value (`Any`) into a FlowValue.
     static func fromJSON(_ any: Any) -> FlowValue {
         switch any {

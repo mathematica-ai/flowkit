@@ -1,4 +1,4 @@
-LangflowKit
+FlowKit
 Copyright 2026 Mathematica
 
 This product is licensed under the Apache License, Version 2.0 (the "License");
@@ -9,7 +9,7 @@ the License is provided in the LICENSE file and at:
 
 ---
 
-LangflowKit is an independent, unofficial project. It is not affiliated with,
+FlowKit is an independent, unofficial project. It is not affiliated with,
 endorsed by, or sponsored by Langflow, DataStax, or IBM. "Langflow" is used only
 descriptively to indicate the flow-export format this software can run on-device.
 All trademarks are the property of their respective owners.

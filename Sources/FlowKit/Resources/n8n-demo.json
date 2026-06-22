@@ -1,0 +1,47 @@
+{
+  "name": "On-device complaint summary (n8n demo)",
+  "nodes": [
+    {
+      "id": "n1",
+      "name": "When clicking Test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "seed": { "complaint": "My Maje wool coat ripped at the seam after two weeks of normal wear." }
+      }
+    },
+    {
+      "id": "n2",
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [220, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "prompt",
+              "value": "=Summarize this customer complaint in one sentence: {{ $json.complaint }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n3",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "parameters": { "text": "={{ $json.prompt }}" }
+    }
+  ],
+  "connections": {
+    "When clicking Test": { "main": [[{ "node": "Build Prompt", "type": "main", "index": 0 }]] },
+    "Build Prompt": { "main": [[{ "node": "OpenAI", "type": "main", "index": 0 }]] }
+  }
+}

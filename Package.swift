@@ -2,29 +2,29 @@
 import PackageDescription
 
 let package = Package(
-    name: "LangflowKit",
+    name: "FlowKit",
     platforms: [.macOS(.v15), .iOS(.v17)],
     products: [
-        .library(name: "LangflowKit", targets: ["LangflowKit"]),
+        .library(name: "FlowKit", targets: ["FlowKit"]),
         .executable(name: "runflow", targets: ["runflow"]),
-        .executable(name: "LangflowDemo", targets: ["LangflowDemo"]),
+        .executable(name: "FlowDemo", targets: ["FlowDemo"]),
     ],
     targets: [
         .target(
-            name: "LangflowKit",
+            name: "FlowKit",
             resources: [.process("Resources")]
         ),
         .executableTarget(
             name: "runflow",
-            dependencies: ["LangflowKit"]
+            dependencies: ["FlowKit"]
         ),
         .executableTarget(
-            name: "LangflowDemo",
-            dependencies: ["LangflowKit"]
+            name: "FlowDemo",
+            dependencies: ["FlowKit"]
         ),
         .testTarget(
-            name: "LangflowKitTests",
-            dependencies: ["LangflowKit"]
+            name: "FlowKitTests",
+            dependencies: ["FlowKit"]
         ),
     ]
 )

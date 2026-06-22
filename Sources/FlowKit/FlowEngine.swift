@@ -1,6 +1,6 @@
 import Foundation
 
-/// The one-stop entry point for embedding LangflowKit in an app.
+/// The one-stop entry point for embedding FlowKit in an app.
 ///
 /// ```swift
 /// let engine = FlowEngine(config: .appleOnDevice)            // on-device LLM

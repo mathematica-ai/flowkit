@@ -1,5 +1,5 @@
 import XCTest
-@testable import LangflowKit
+@testable import FlowKit
 
 #if canImport(FoundationModels)
 import FoundationModels

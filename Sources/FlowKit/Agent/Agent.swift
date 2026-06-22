@@ -23,7 +23,7 @@ struct BridgedTool: FoundationModels.Tool {
     }
 }
 
-/// On-device agent: runs an Apple Foundation Models tool-calling loop over LangflowKit tools.
+/// On-device agent: runs an Apple Foundation Models tool-calling loop over FlowKit tools.
 /// The native analogue of the Langflow `Agent` node — the model decides which tools to call
 /// (knowledge retriever, OCR, …) before producing its answer.
 @available(macOS 26.0, iOS 26.0, *)
