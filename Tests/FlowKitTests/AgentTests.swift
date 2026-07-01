@@ -13,8 +13,8 @@ final class AgentTests: XCTestCase {
         }
 
         let corpus = [
-            KnowledgeDocument(id: "maje-returns",
-                text: "Maje accepts returns within 30 days for manufacturing defects in France."),
+            KnowledgeDocument(id: "acme-returns",
+                text: "Acme accepts returns within 30 days for manufacturing defects."),
         ]
         let tool = RetrieverTool(retriever: EmbeddingRetriever(documents: corpus, useEmbeddings: false))
         let agent = Agent(
@@ -22,7 +22,7 @@ final class AgentTests: XCTestCase {
             tools: [tool]
         )
 
-        let answer = try await agent.run("How many days do I have to return a defective Maje item in France?")
+        let answer = try await agent.run("How many days do I have to return a defective Acme item?")
         XCTAssertFalse(answer.isEmpty, "agent returned empty answer")
     }
 }

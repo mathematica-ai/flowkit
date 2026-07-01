@@ -43,11 +43,11 @@ final class N8nExecutionTests: XCTestCase {
                                 services: Services(llm: .from(config: .echoOnly)))
         let result = try await executor.run(flow)
 
-        // Trigger seed → Set builds "prompt" via {{ $json.complaint }} → LLM consumes it.
+        // Trigger seed → Set builds "prompt" via {{ $json.feedback }} → LLM consumes it.
         let openAIItem = try XCTUnwrap(result.nodeOutputs["OpenAI"]?["main"]?.asDict)
         let text = try XCTUnwrap(openAIItem["text"]?.asText)
-        XCTAssertTrue(text.contains("Maje"), "LLM output should reflect the complaint flowing through Set: \(text)")
-        XCTAssertTrue(text.contains("Summarize this customer complaint"),
+        XCTAssertTrue(text.contains("wool coat"), "LLM output should reflect the feedback flowing through Set: \(text)")
+        XCTAssertTrue(text.contains("Summarize this customer feedback"),
                       "the n8n expression should have interpolated the prompt: \(text)")
     }
 }

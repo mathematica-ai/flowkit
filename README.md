@@ -129,10 +129,10 @@ Beyond plain DAG flows, FlowKit ships the pieces an *agentic* flow needs — all
 let retriever = RetrieverTool(retriever: EmbeddingRetriever(documents: policyDocs))
 let ocr = VisionOCRTool(images: receiptImageData)
 let agent = Agent(
-    instructions: "You triage customer complaints. Use the tools to ground every decision.",
+    instructions: "You triage customer support tickets. Use the tools to ground every decision.",
     tools: [retriever, ocr]
 )
-let triage = try await agent.run(complaintText, generating: ComplaintTriage.self)  // @Generable
+let triage = try await agent.run(ticketText, generating: TicketTriage.self)  // @Generable
 ```
 
 The `Agent` requires iOS/macOS 26 (Apple Foundation Models); the retriever and OCR work on iOS 14+/macOS 11+.
