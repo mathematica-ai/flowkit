@@ -1,0 +1,17 @@
+# Normalize line endings to LF on checkin; auto-detect text vs binary.
+* text=auto eol=lf
+
+# Swift sources — better diffs and language stats.
+*.swift  text diff=swift linguist-language=Swift
+
+# Data / fixtures kept as text.
+*.json   text
+*.md     text
+
+# Binary assets — no EOL conversion, no textual diff/merge.
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.pdf    binary
+*.mlmodel   binary
+*.mlpackage binary
